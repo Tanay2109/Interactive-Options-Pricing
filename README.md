@@ -3,6 +3,9 @@
 ## Overview
 This web application provides an interactive platform for pricing European options using the Black-Scholes model. It combines theoretical finance with real-time market data to deliver accurate valuations and visual analytics for options traders, students, and financial professionals.
 
+![image](https://github.com/user-attachments/assets/9675def0-2125-4155-affc-8e33b957eff6)
+
+
 ## Black-Scholes Model
 The Black-Scholes model is a mathematical framework for pricing European-style options. It calculates the theoretical value of options using five key inputs: stock price, strike price, time to expiration, risk-free rate, and volatility.
 
@@ -52,6 +55,12 @@ The web application offers a comprehensive suite of features for options analysi
 1. **Price History**: 1-year stock price chart
 2. **Volatility Analysis**: 30-day rolling volatility visualization
 3. **Mispricing Heatmap**: Interactive strike-by-strike comparison
+
+![image](https://github.com/user-attachments/assets/b87b9d97-bafa-4366-823a-87435f38fafd) 
+
+![image](https://github.com/user-attachments/assets/680ff1ae-0e7e-409d-864e-4edffa30de9b)
+
+![image](https://github.com/user-attachments/assets/d7ff00cb-ed35-432a-8d87-3d1e0fd81fe0)
 
 ### Technical Features
 - Real-time data integration with Yahoo Finance
