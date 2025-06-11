@@ -1,9 +1,9 @@
-# Black-Scholes Option Pricer 
+# Interactive Options Pricer 
 
 ## Overview
-This web application provides an interactive platform for pricing European options using the Black-Scholes model. It combines theoretical finance with real-time market data to deliver accurate valuations and visual analytics for options traders, students, and financial professionals.
+This web application provides an interactive platform for pricing European options, giving users the option to choose between Black-Scholes model and Cox Ross Rubenstein Binomial Tree model. It combines theoretical finance with real-time market data to deliver accurate valuations and visual analytics for options traders, students, and financial professionals.
 
-![image](https://github.com/user-attachments/assets/9675def0-2125-4155-affc-8e33b957eff6)
+![image](https://github.com/user-attachments/assets/160e337b-a187-4ee5-9fe3-f19a20fd120b)
 
 
 ## Black-Scholes Model
@@ -42,11 +42,17 @@ The Black-Scholes model operates under several important assumptions:
 6. **Frictionless markets**: No transaction costs or taxes
 7. **Constant interest rates**: Risk-free rate remains stable
 
+## Cox-Ross-Rubenstein Binomial Tree
+It is a representation of the intrinsic value an option may take at different time periods. The value of an option at any node depends on the probability that the price of the underlying asset will either increase or decrease at any given node.
+
+### Risk Neutral Probability (p)
+It represents a hypothetical probability measure under which the present value of the expected future payoff of a financial asset when discounted at risk free rate, should be equal to the current market price of the asset. It is used to discount cash flows.
+ 
 ## Website Capabilities
 The web application offers a comprehensive suite of features for options analysis:
 
 ### Real-Time Functionality
-- **Option Valuation**: Compute Black-Scholes prices for any US stock option
+- **Option Valuation**: Compute Black-Scholes or Binomial Tree based prices for any US stock option
 - **Market Comparison**: Compare theoretical prices with live market quotes
 - **Mispricing Detection**: Identify overvalued/undervalued options
 - **Volatility Analysis**: Calculate historical volatility or input custom values
@@ -55,12 +61,16 @@ The web application offers a comprehensive suite of features for options analysi
 1. **Price History**: 1-year stock price chart
 2. **Volatility Analysis**: 30-day rolling volatility visualization
 3. **Mispricing Heatmap**: Interactive strike-by-strike comparison
+4. **Binomial Tree Visualization**: Visualizes the first 5 steps of the CRR Binomial Tree
 
 ![image](https://github.com/user-attachments/assets/b87b9d97-bafa-4366-823a-87435f38fafd) 
 
 ![image](https://github.com/user-attachments/assets/680ff1ae-0e7e-409d-864e-4edffa30de9b)
 
 ![image](https://github.com/user-attachments/assets/d7ff00cb-ed35-432a-8d87-3d1e0fd81fe0)
+
+![image](https://github.com/user-attachments/assets/080f1058-b80d-41a5-b6d6-0098e52decb6)
+
 
 ### Technical Features
 - Real-time data integration with Yahoo Finance
@@ -77,7 +87,7 @@ Planned features for upcoming versions:
 
 ## Access the Application
 Live application hosted on Streamlit Sharing:  
-[Black-Scholes Option Pricer](https://tanay2109-black-scholes-option-pricing-main-kkwk9x.streamlit.app/)
+[Interactive Options Pricer](https://tanay2109-black-scholes-option-pricing-main-kkwk9x.streamlit.app/)
 
 ## Technical Details
 **Technology Stack:**
