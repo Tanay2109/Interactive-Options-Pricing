@@ -4,3 +4,6 @@ pandas
 altair
 scipy
 matplotlib
+streamlit
+datetime
+scipy

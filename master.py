@@ -50,6 +50,29 @@ def binomial_tree_option_price(S, K, T, r, sigma, option_type, n=100):
 
     return option_tree[0, 0]
 
+def calculate_greeks(S, K, T, r, sigma, option_type):
+    """Calculate option Greeks for both call and put options"""
+    d1 = (np.log(S / K) + (r + 0.5 * sigma**2) * T) / (sigma * np.sqrt(T))
+    d2 = d1 - sigma * np.sqrt(T)
+    nd1 = norm.pdf(d1)
+    N_d1 = norm.cdf(d1)
+    N_d2 = norm.cdf(d2)
+
+    if option_type == 'call':
+        delta = N_d1
+        theta = (-(S * nd1 * sigma) / (2 * np.sqrt(T)) - r * K * np.exp(-r * T) * N_d2) / 365
+        rho = K * T * np.exp(-r * T) * N_d2 / 100
+    else:  # put
+        delta = N_d1 - 1
+        theta = (-(S * nd1 * sigma) / (2 * np.sqrt(T)) + r * K * np.exp(-r * T) * norm.cdf(-d2)) / 365
+        rho = -K * T * np.exp(-r * T) * norm.cdf(-d2) / 100
+
+    gamma = nd1 / (S * sigma * np.sqrt(T))
+    vega = S * nd1 * np.sqrt(T) / 100
+
+    return delta, gamma, theta, vega, rho
+
+
 # ─────────────── Page config ───────────────
 st.set_page_config(
     page_title=" Interactive Option Pricer",
@@ -111,6 +134,7 @@ hist_days = st.sidebar.number_input(
 
 compute_button = st.sidebar.button("Compute Option Prices")
 
+
 # ─────────────── Main Content ───────────────
 if not compute_button:
     # ─── Landing Page ───
@@ -121,9 +145,9 @@ if not compute_button:
                 background-color: #004466; 
                 border-radius: 10px;
                 color: white;">
-      <h1 style="font-size:48px; margin-bottom: 5px;"> Interactive Option Pricer</h1>
+      <h1 style="font-size:48px; margin-bottom: 5px;"> Option Pricer </h1>
       <p style="font-size:20px; color: #f0f0f0; margin-top: 0px;">
-        Black-Scholes and Cox-Ross-Rubenstein Binomial Tree models are used for fair value pricing of European style Options. On this website you can check the fair values of a contract computed either through BS method or CRR Binomial Tree method. You can also customize parameters and analyze insightful graphs! 
+        This application implements industry-standard Black-Scholes and Cox-Ross-Rubinstein binomial tree models to compute fair values for European-style options contracts. Perform comparative analysis between models to leverage their respective strengths: Black-Scholes for computational efficiency in continuous markets, and binomial trees for discrete-time modeling flexibility. All valuations include comprehensive Greeks evaluation - Delta, Gamma, Theta, Vega, and Rho - quantifying risk exposures to underlying price movements, volatility shifts, time decay, and interest rate changes. While, interactive visualizations transform theoretical pricing into actionable market insights!
       </p>
     </div>
     """,
@@ -251,10 +275,10 @@ if not compute_button:
         )
 
     with intro_3:
-        st.markdown("### Model Comparison")
+        st.markdown("### Greeks Analysis")
         st.write(
             """
-        Compare the results obtained from both models for a holistic view of the fair value for the contract. Use either model according to its strengths, weaknesses and use case.
+        Quantify option price sensitivities to key market parameters for risk management by analyzing Greeks (Delta, Gamma, Theta, Vega and Rho).
         """
         )
 
@@ -455,6 +479,160 @@ with col_right:
     else:
         st.info("ℹ️ Put: No market quote.")
 
+
+# Greeks Analysis
+st.markdown("---")
+st.subheader("Greeks Analysis")
+
+try:
+    # Calculate Greeks
+    call_delta, call_gamma, call_theta, call_vega, call_rho = calculate_greeks(
+        S, k, t, r, ann_vol, 'call'
+    )
+    put_delta, put_gamma, put_theta, put_vega, put_rho = calculate_greeks(
+        S, k, t, r, ann_vol, 'put'
+    )
+
+    # Create and display DataFrame
+    greeks_data = {
+        'Greek': ['Delta', 'Gamma', 'Theta (daily)', 'Vega (per 1%)', 'Rho (per 1%)'],
+        'Call': [
+            f"{call_delta:.4f}",
+            f"{call_gamma:.6f}",
+            f"{call_theta:.6f}",
+            f"{call_vega:.4f}",
+            f"{call_rho:.4f}"
+        ],
+        'Put': [
+            f"{put_delta:.4f}",
+            f"{put_gamma:.6f}",
+            f"{put_theta:.6f}",
+            f"{put_vega:.4f}",
+            f"{put_rho:.4f}"
+        ]
+    }
+    greeks_df = pd.DataFrame(greeks_data)
+
+    # Display styled table - fixed Styler error
+    st.dataframe(
+        greeks_df.style
+        .format(precision=4)
+        .set_properties(**{'text-align': 'center'})
+        .set_table_styles([{
+            'selector': 'th',
+            'props': [('text-align', 'center'), ('background-color', '#0E1117'), ('color', 'white')]
+        }])
+    )
+
+    # Create tabs for each Greek
+    tab1, tab2, tab3, tab4, tab5 = st.tabs(["Delta", "Gamma", "Theta", "Vega", "Rho"])
+    with tab1:  # Delta
+        st.markdown("**Delta Sensitivity**")
+        st.caption("Measures rate of change of option value with respect to underlying price")
+
+        # Create Delta visualization
+        delta_df = pd.DataFrame({
+            'Option': ['Call', 'Put'],
+            'Value': [call_delta, put_delta]
+        })
+        delta_chart = alt.Chart(delta_df).mark_bar().encode(
+            x='Option',
+            y='Value',
+            color=alt.condition(
+                alt.datum.Value > 0,
+                alt.value('#4CAF50'),  # Green
+                alt.value('#F44336')   # Red
+            )
+        ).properties(width=400, height=300, title="Delta Values")
+        st.altair_chart(delta_chart, use_container_width=True)
+
+        # Show metrics below chart
+        st.metric("Call Delta", f"{call_delta:.4f}")
+        st.metric("Put Delta", f"{put_delta:.4f}")
+
+    with tab2:  # Gamma
+        st.markdown("**Gamma Sensitivity**")
+        st.caption("Measures rate of change of Delta with respect to underlying price")
+
+        gamma_df = pd.DataFrame({
+            'Option': ['Call', 'Put'],
+            'Value': [call_gamma, put_gamma]
+        })
+        gamma_chart = alt.Chart(gamma_df).mark_bar().encode(
+            x='Option',
+            y='Value',
+            color=alt.value('#2196F3')  # Blue for positive-only Gamma
+        ).properties(width=400, height=300, title="Gamma Values")
+        st.altair_chart(gamma_chart, use_container_width=True)
+
+        st.metric("Call Gamma", f"{call_gamma:.6f}")
+        st.metric("Put Gamma", f"{put_gamma:.6f}")
+
+    with tab3:  # Theta
+        st.markdown("**Theta (Time Decay)**")
+        st.caption("Measures sensitivity to time passing (daily decay)")
+
+        theta_df = pd.DataFrame({
+            'Option': ['Call', 'Put'],
+            'Value': [call_theta, put_theta]
+        })
+        theta_chart = alt.Chart(theta_df).mark_bar().encode(
+            x='Option',
+            y='Value',
+            color=alt.condition(
+                alt.datum.Value > 0,
+                alt.value('#4CAF50'),  # Green
+                alt.value('#F44336')   # Red
+            )
+        ).properties(width=400, height=300, title="Theta Values (Daily)")
+        st.altair_chart(theta_chart, use_container_width=True)
+
+        st.metric("Call Theta", f"{call_theta:.6f}")
+        st.metric("Put Theta", f"{put_theta:.6f}")
+
+    with tab4:  # Vega
+        st.markdown("**Vega (Volatility Sensitivity)**")
+        st.caption("Measures sensitivity to 1% change in implied volatility")
+
+        vega_df = pd.DataFrame({
+            'Option': ['Call', 'Put'],
+            'Value': [call_vega, put_vega]
+        })
+        vega_chart = alt.Chart(vega_df).mark_bar().encode(
+            x='Option',
+            y='Value',
+            color=alt.value('#9C27B0')  # Purple for positive-only Vega
+        ).properties(width=400, height=300, title="Vega Values (per 1% change)")
+        st.altair_chart(vega_chart, use_container_width=True)
+
+        st.metric("Call Vega", f"{call_vega:.4f}")
+        st.metric("Put Vega", f"{put_vega:.4f}")
+
+    with tab5:  # Rho
+        st.markdown("**Rho (Interest Rate Sensitivity)**")
+        st.caption("Measures sensitivity to 1% change in risk-free rate")
+
+        rho_df = pd.DataFrame({
+            'Option': ['Call', 'Put'],
+            'Value': [call_rho, put_rho]
+        })
+        rho_chart = alt.Chart(rho_df).mark_bar().encode(
+            x='Option',
+            y='Value',
+            color=alt.condition(
+                alt.datum.Value > 0,
+                alt.value('#4CAF50'),  # Green
+                alt.value('#F44336')   # Red
+            )
+        ).properties(width=400, height=300, title="Rho Values (per 1% change)")
+        st.altair_chart(rho_chart, use_container_width=True)
+
+        st.metric("Call Rho", f"{call_rho:.4f}")
+        st.metric("Put Rho", f"{put_rho:.4f}")
+except Exception as e:
+    st.error(f"Error calculating Greeks: {str(e)}")
+    st.warning("Please check your input parameters and try again")
+
 st.markdown("---")
 st.header("Graphical Analysis")
 
@@ -515,13 +693,22 @@ if pricing_model=="Black-Scholes":
                 bs_c_i = S * norm.cdf(d1_i) - strike_i * np.exp(-r * t) * norm.cdf(d2_i)
                 bs_p_i = strike_i * np.exp(-r * t) * norm.cdf(-d2_i) - S * norm.cdf(-d1_i)
 
+                call_delta, call_gamma, call_theta, call_vega, call_rho = calculate_greeks(
+                S, strike_i, t, r, ann_vol, 'call')
+                put_delta, put_gamma, put_theta, put_vega, put_rho = calculate_greeks(
+                S, strike_i, t, r, ann_vol, 'put')
                 mispricing_list.append(
                     {
                         "strike": strike_i,
                         "OptionType": "Call",
                         "Mispricing": m_call - bs_c_i,
                         "MarketPrice": m_call,
-                        "BSPrice": bs_c_i
+                        "BSPrice": bs_c_i,
+                        "Delta": call_delta,
+                        "Gamma": call_gamma,
+                        "Theta": call_theta,
+                        "Vega": call_vega,
+                        "Rho": call_rho
                     }
                 )
                 mispricing_list.append(
@@ -530,7 +717,12 @@ if pricing_model=="Black-Scholes":
                         "OptionType": "Put",
                         "Mispricing": m_put - bs_p_i,
                         "MarketPrice": m_put,
-                        "BSPrice": bs_p_i
+                        "BSPrice": bs_p_i,
+                        "Delta": put_delta,
+                        "Gamma": put_gamma,
+                        "Theta": put_theta,
+                        "Vega": put_vega,
+                        "Rho": put_rho
                     }
                 )
 
@@ -579,7 +771,12 @@ if pricing_model=="Black-Scholes":
                     alt.Tooltip("OptionType:N", title="Option Type"),
                     alt.Tooltip("Mispricing:Q", title="Mispricing", format="$.4f"),
                     alt.Tooltip("MarketPrice:Q", title="Market Price", format="$.4f"),
-                    alt.Tooltip("BSPrice:Q", title="BS Price", format="$.4f")
+                    alt.Tooltip("TheoreticalPrice:Q", title=f"{pricing_model} Price", format="$.4f"),
+                    alt.Tooltip("Delta:Q", title="Delta", format=".4f"),
+                    alt.Tooltip("Gamma:Q", title="Gamma", format=".6f"),
+                    alt.Tooltip("Theta:Q", title="Theta", format=".6f"),
+                    alt.Tooltip("Vega:Q", title="Vega", format=".4f"),
+                    alt.Tooltip("Rho:Q", title="Rho", format=".4f")
                 ]
             ).properties(
                 width=1200,  # Wider chart
