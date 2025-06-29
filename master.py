@@ -147,7 +147,7 @@ if not compute_button:
                 color: white;">
       <h1 style="font-size:48px; margin-bottom: 5px;"> Option Pricer </h1>
       <p style="font-size:20px; color: #f0f0f0; margin-top: 0px;">
-        This application implements industry-standard Black-Scholes and Cox-Ross-Rubinstein binomial tree models to compute fair values for European-style options contracts. Perform comparative analysis between models to leverage their respective strengths: Black-Scholes for computational efficiency in continuous markets, and binomial trees for discrete-time modeling flexibility. All valuations include comprehensive Greeks evaluation - Delta, Gamma, Theta, Vega, and Rho - quantifying risk exposures to underlying price movements, volatility shifts, time decay, and interest rate changes. While, interactive visualizations transform theoretical pricing into actionable market insights!
+        This application implements industry-standard Black-Scholes and Cox-Ross-Rubinstein binomial tree models to compute fair values for European-style options contracts. All valuations include comprehensive Greeks evaluation - Delta, Gamma, Theta, Vega, and Rho - quantifying risk exposures to underlying price movements, volatility shifts, time decay, and interest rate changes. While, interactive visualizations transform theoretical pricing into actionable market insights!
       </p>
     </div>
     """,
