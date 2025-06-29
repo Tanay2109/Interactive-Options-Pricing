@@ -1,9 +1,9 @@
-# Interactive Options Pricer 
+# Option Pricer 
 
 ## Overview
-This web application provides an interactive platform for pricing European options, giving users the option to choose between Black-Scholes model and Cox Ross Rubenstein Binomial Tree model. It combines theoretical finance with real-time market data to deliver accurate valuations and visual analytics for options traders, students, and financial professionals.
+This application implements Black-Scholes and Cox-Ross-Rubinstein binomial models for European options valuation. Compare models to leverage their distinct advantages: Black-Scholes for computational efficiency in continuous markets, binomial trees for discrete-time flexibility. Every valuation includes complete Greeks analysis (Δ, Γ, Θ, V, ρ) quantifying sensitivity to price, volatility, time decay, and interest rates. Interactive visualizations transform theoretical pricing into actionable market intelligence.
 
-![image](https://github.com/user-attachments/assets/160e337b-a187-4ee5-9fe3-f19a20fd120b)
+![image](https://github.com/user-attachments/assets/bc671f6f-7602-473d-963d-b3c884c3c81e)
 
 
 ## Black-Scholes Model
@@ -47,13 +47,22 @@ It is a representation of the intrinsic value an option may take at different ti
 
 ### Risk Neutral Probability (p)
 It represents a hypothetical probability measure under which the present value of the expected future payoff of a financial asset when discounted at risk free rate, should be equal to the current market price of the asset. It is used to discount cash flows.
- 
+
+## Greeks Analysis
+Quantify option price sensitivities to key market parameters using the fundamental risk measures. 
+- Delta captures directional exposure to underlying price movements.
+- Gamma measures convexity risk as Delta accelerates near-the-money.
+- Theta quantifies time decay erosion. Vega assesses volatility sensitivity.
+- Rho evaluates interest rate exposure.
+These metrics form the foundation of risk management and hedging strategies across all pricing models.
+
 ## Website Capabilities
 The web application offers a comprehensive suite of features for options analysis:
 
 ### Real-Time Functionality
 - **Option Valuation**: Compute Black-Scholes or Binomial Tree based prices for any US stock option
 - **Market Comparison**: Compare theoretical prices with live market quotes
+- **Greeks Analysis**: Quantify option price sensitivities to key market parameters for risk management, by analyzing Delta, Gamma, Theta, Vega and Rho
 - **Mispricing Detection**: Identify overvalued/undervalued options
 - **Volatility Analysis**: Calculate historical volatility or input custom values
 
@@ -81,13 +90,13 @@ The web application offers a comprehensive suite of features for options analysi
 ## Future Enhancements
 Planned features for upcoming versions:
 - **Indian Markets**: Extend model to Indian market options
-- **American Options Pricing**: Implement binomial tree models
+- **American Options Pricing**: Implement binomial tree models for pricing American-style options
 - **Portfolio Analysis**: Evaluate multiple positions simultaneously
 - **Historical Backtesting**: Test strategies against historical data
 
 ## Access the Application
 Live application hosted on Streamlit Sharing:  
-[Interactive Options Pricer](https://tanay2109-black-scholes-option-pricing-main-kkwk9x.streamlit.app/)
+[Interactive Options Pricer](https://options-pricer.streamlit.app/)
 
 ## Technical Details
 **Technology Stack:**
