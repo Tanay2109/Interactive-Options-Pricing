@@ -95,7 +95,7 @@ Planned features for upcoming versions:
 
 ## Access the Application
 Live application hosted on Streamlit Sharing:  
-[Interactive Options Pricer](https://options-pricer.streamlit.app/)
+[Option Pricer](https://options-pricer.streamlit.app/)
 
 ## Technical Details
 **Technology Stack:**
