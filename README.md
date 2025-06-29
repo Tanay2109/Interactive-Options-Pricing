@@ -49,12 +49,11 @@ It is a representation of the intrinsic value an option may take at different ti
 It represents a hypothetical probability measure under which the present value of the expected future payoff of a financial asset when discounted at risk free rate, should be equal to the current market price of the asset. It is used to discount cash flows.
 
 ## Greeks Analysis
-Quantify option price sensitivities to key market parameters using the fundamental risk measures. 
+Quantify option price sensitivities to key market parameters using the fundamental risk measures. These metrics form the foundation of risk management and hedging strategies across all pricing models. 
 - Delta captures directional exposure to underlying price movements.
 - Gamma measures convexity risk as Delta accelerates near-the-money.
 - Theta quantifies time decay erosion. Vega assesses volatility sensitivity.
 - Rho evaluates interest rate exposure.
-These metrics form the foundation of risk management and hedging strategies across all pricing models.
 
 ## Website Capabilities
 The web application offers a comprehensive suite of features for options analysis:
@@ -76,7 +75,7 @@ The web application offers a comprehensive suite of features for options analysi
 
 ![image](https://github.com/user-attachments/assets/680ff1ae-0e7e-409d-864e-4edffa30de9b)
 
-![image](https://github.com/user-attachments/assets/d7ff00cb-ed35-432a-8d87-3d1e0fd81fe0)
+![image](https://github.com/user-attachments/assets/85638251-cb98-4896-af59-e2715959a605)
 
 ![image](https://github.com/user-attachments/assets/080f1058-b80d-41a5-b6d6-0098e52decb6)
 
